@@ -99,28 +99,25 @@ public:
 ```c++
 //迭代
 ListNode* reverseList(ListNode* head) {
-    ListNode* pre = NULL;
-    ListNode* cur = head;
-    while (cur != NULL)
+    ListNode* first = NULL;
+    ListNode* second = head;
+    while (second)
     {
-        ListNode *lat = cur->next;
-        cur->next = pre;
-        pre = cur;
-        cur = lat;
+        ListNode *third = second->next;
+        cur->next = first;
+        first = second;
+        second = third;
     }
-    return pre;
+    return first;
 }
 
 //递归
 ListNode* reverseList(ListNode* head) {
-    if(head == NULL || head->next == NULL){
-        return head;
-    }else{
-        ListNode *h = reverseList(head->next);
-        head->next->next = head;
-        head->next = NULL;
-        return h;
-    }
+    if(!head || !head->next) return head;
+    ListNode *h = reverseList(head->next);
+    head->next->next = head;
+    head->next = NULL;
+    return h;
 }
 ```
 
@@ -231,8 +228,10 @@ ListNode* partition(ListNode* head, int x) {
 ListNode* sortList(ListNode* head) {
      if(head == NULL || head->next == NULL) return head;
 
-     ListNode *slow = head;
-     ListNode *fast = head->next;
+     ListNode* fast = head;      // get the second mid when even
+     // ListNode *fast = head->next;  // find the first mid node
+     // ListNode* fast = head->next;  // get the first mid when even
+     ListNode* fast = head->next->next;  // get the node before first mid
      while(fast != NULL && fast->next != NULL){
          slow = slow->next;
          fast = fast->next->next;
@@ -260,7 +259,7 @@ ListNode *mergeSortList(ListNode *left, ListNode *right){
         }
         cur = cur->next;
     }
-
+	// cur->next = left ? left:right;
     while(left != NULL){
         cur->next = left;
         cur = cur->next;
@@ -444,7 +443,7 @@ ListNode *detectCycle(ListNode *head) {
 
 这两种方式不同点在于，**一般用 fast=head.Next 较多**，因为这样可以知道中点的上一个节点，可以用来删除等操作。
 
-- fast 如果初始化为 head.Next 则中点在 slow.Next
+- fast 如果初始化为 head.Next 则中点在 slow.Next, slow为左中点
 - fast 初始化为 head,则中点在 slow
 
 ### [palindrome-linked-list](https://leetcode-cn.com/problems/palindrome-linked-list/)
